@@ -27,7 +27,6 @@ export const useHttp = () => {
             return await makeRequest()
         } catch (e) {
             setError(e.message)
-            throw e
         } finally {
             setIsLoading(false)
         }

@@ -40,38 +40,24 @@ const AuthPage = () => {
     const {isLoading, request, error, clearError} = useHttp()
     const classes = useStyles()
 
-    React.useEffect(() => {
-
-    }, [error])
-
     const [form, setForm] = React.useState({
         email: '', password: ''
     })
     const changeHandler = event => {
         setForm({...form, [event.target.name]: event.target.value})
-
-        if (error) {
-            clearError()
-        }
+        clearError()
     }
 
     const registerHandler = async () => {
-        try {
-            await request('/api/auth/register', 'POST', {...form})
-            await loginHandler()
-        } catch (e) {
-            console.log(e)
-        }
+        await request('/api/auth/register', 'POST', {...form})
+        await loginHandler()
     }
 
     const loginHandler = async (event) => {
         event && event.preventDefault()
-        try {
-            const data = await request('/api/auth/login', 'POST', {...form})
-            auth.login(data.token, data.userId)
-        } catch (e) {
 
-        }
+        const data = await request('/api/auth/login', 'POST', {...form})
+        auth.login(data.token, data.userId)
     }
 
     return (
