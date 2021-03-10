@@ -49,15 +49,22 @@ const AuthPage = () => {
     }
 
     const registerHandler = async () => {
-        await request('/api/auth/register', 'POST', {...form})
-        await loginHandler()
+        try {
+            await request('/api/auth/register', 'POST', {...form})
+            await loginHandler()
+        } catch (e) {
+
+        }
     }
 
     const loginHandler = async (event) => {
         event && event.preventDefault()
+        try {
+            const data = await request('/api/auth/login', 'POST', {...form})
+            auth.login(data.token, data.userId)
+        } catch (e) {
 
-        const data = await request('/api/auth/login', 'POST', {...form})
-        auth.login(data.token, data.userId)
+        }
     }
 
     return (

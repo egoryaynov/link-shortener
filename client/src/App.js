@@ -1,14 +1,16 @@
 import React from 'react'
 import {useRoutes} from "./routes";
-import {Container} from "@material-ui/core";
+import {CircularProgress, Container} from "@material-ui/core";
 import {useAuth} from "./hooks/auth.hook";
 import {AuthContext} from "./context/auth.context";
 import Navbar from "./components/Navbar/Navbar";
 
 function App() {
-    const {login, logout, token, userId} = useAuth()
+    const {login, logout, token, userId, ready} = useAuth()
     const isAuth = !!token
     const routes = useRoutes(isAuth)
+
+    if (!ready) return <CircularProgress color="secondary"/>
 
     return (
         <AuthContext.Provider value={{

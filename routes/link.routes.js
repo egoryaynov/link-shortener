@@ -1,6 +1,6 @@
 const {Router} = require('express')
 const config = require('config')
-const {Link} = require('../models/Link')
+const Link = require('../models/Link')
 const auth = require('../middleware/auth.middleware')
 const shortid = require('shortid')
 const router = Router()
@@ -11,22 +11,21 @@ router.post('/generate', auth, async (req, res) => {
         const baseUrl = config.get('baseUrl')
         const {from} = req.body
 
-        const code = shortid.generate()
-        const existing = await Link.findOne({from})
+        Link.findOne({from}, async (error, result) => {
+            if (result) {
+                return res.json({link: result})
+            } else {
+                const code = shortid.generate()
+                const to = baseUrl + '/t/' + code
+                const link = new Link({
+                    code, to, from, owner: req.user.userId
+                })
 
-        if (existing) {
-            return res.json({link: existing})
-        }
+                await link.save()
 
-        const to = baseUrl + '/t/' + code
-
-        const link = new Link({
-            code, to, from, owner: req.user.userId
+                return res.status(201).json({link})
+            }
         })
-
-        await link.save()
-
-        res.status(201).json({link})
     } catch (e) {
         return res.status(500).json({message: 'Ошибка при генерации ссылки, попробуйте снова'})
     }
@@ -35,8 +34,13 @@ router.post('/generate', auth, async (req, res) => {
 /* /api/link/ */
 router.get('/', auth, async (req, res) => {
     try {
-        const links = await Link.find({owner: req.user.userId})
-        res.json(links)
+        Link.find({owner: req.user.userId}, (error, result) => {
+            if (error) {
+                throw error
+            }
+
+            res.json(result)
+        })
     } catch (e) {
         return res.status(500).json({message: 'Ошибка при получении ссылок, попробуйте снова'})
     }
@@ -45,8 +49,13 @@ router.get('/', auth, async (req, res) => {
 /* /api/link/:id */
 router.get('/:id', auth, async (req, res) => {
     try {
-        const link = await Link.findById(req.params.id)
-        res.json(link)
+        Link.findById(req.params.id, (error, result) => {
+            if (error) {
+                throw error
+            }
+
+            res.json(result)
+        })
     } catch (e) {
         return res.status(500).json({message: 'Ошибка при получении ссылки по id, попробуйте снова'})
     }

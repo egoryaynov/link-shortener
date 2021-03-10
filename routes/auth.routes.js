@@ -47,7 +47,7 @@ router.post(
 router.post(
     '/login',
     [
-        check('email', 'Некорректный email').normalizeEmail().isEmail(),
+        check('email', 'Некорректный email').isEmail(),
         check('password', 'Минимальная длина пароля 6 символов').isLength({min: 6})
     ],
     async (req, res) => {
