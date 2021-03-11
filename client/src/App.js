@@ -3,7 +3,7 @@ import {useRoutes} from "./routes";
 import {CircularProgress, Container} from "@material-ui/core";
 import {useAuth} from "./hooks/auth.hook";
 import {AuthContext} from "./context/auth.context";
-import Navbar from "./components/Navbar/Navbar";
+import Navbar from "./components/Navbar";
 
 function App() {
     const {login, logout, token, userId, ready} = useAuth()

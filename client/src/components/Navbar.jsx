@@ -1,6 +1,6 @@
 import React, {useContext} from 'react';
 import {NavLink} from "react-router-dom";
-import {AuthContext} from "../../context/auth.context";
+import {AuthContext} from "../context/auth.context";
 import {makeStyles} from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
